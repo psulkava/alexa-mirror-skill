@@ -16,10 +16,10 @@ const languageStrings = {
 
 const handlers = {
     'LaunchRequest': function () {
-        this.emit('Welcome to the smart mirror skill!');
+        this.emit(':tell', 'Welcome to the smart mirror skill!');
     },
     'TakeSelfie': function () {
-        this.emit('Taking a picture. Say cheese!');
+        this.emit(':tell', 'Taking a picture. Say cheese!');
     },
     'AMAZON.HelpIntent': function () {
         const speechOutput = this.t('HELP_MESSAGE');
@@ -32,11 +32,16 @@ const handlers = {
     'AMAZON.StopIntent': function () {
         this.emit(':tell', this.t('STOP_MESSAGE'));
     },
+    'Unhandled': function () {
+        const speechOutput = this.t('HELP_MESSAGE');
+        const reprompt = this.t('HELP_REPROMPT');
+        this.emit(':ask', speechOutput, reprompt);
+    }
 };
 
 exports.handler = function (event, context) {
     const alexa = Alexa.handler(event, context);
-    alexa.APP_ID = APP_ID;
+    alexa.appId = APP_ID;
     
     alexa.resources = languageStrings;
     alexa.registerHandlers(handlers);
